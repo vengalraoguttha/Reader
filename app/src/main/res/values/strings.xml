@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Reader</string>
+    <string name="menu_action_setting">Settings</string>
+    <string name="menu_action_search">Search</string>
+    <string name="search_fab_description">Search Books</string>
+    <string name="main_book_image_description">Book Image</string>
+    <string name="problem">No Network connection.</string>
+</resources>

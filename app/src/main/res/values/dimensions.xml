@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="book_main_image_size">200dp</dimen>
+    <dimen name="search_fab_size">56dp</dimen>
+    <dimen name="fab_standard_elevation">6dp</dimen>
+    <dimen name="fab_pressed">12dp</dimen>
+</resources>

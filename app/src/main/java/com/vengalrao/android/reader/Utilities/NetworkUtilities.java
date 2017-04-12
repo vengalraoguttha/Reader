@@ -61,34 +61,47 @@ public class NetworkUtilities {
         Book[] books=null;
         try {
             JSONObject object1=new JSONObject(responseMain);
-            JSONArray array=object1.getJSONArray("items");
-            books=new Book[array.length()];
-            for(int i=0;i<array.length();i++){
-                books[i]=new Book();
-                JSONObject object=array.getJSONObject(i);
-                books[i].setId(object.getString("id"));
-                JSONObject jsonObject=object.getJSONObject("volumeInfo");
-                books[i].setTitle(jsonObject.getString("title"));
-                Log.v("title",books[i].getTitle());
-                JSONArray jsonArray=jsonObject.getJSONArray("authors");
-                books[i].setAuthors(jsonArray.getString(0));
-                books[i].setPublishedDate(jsonObject.getString("publishedDate"));
-                books[i].setDescription(jsonObject.getString("description"));
-                books[i].setPageCount(jsonObject.getString("pageCount"));
-                if(jsonObject.has("categories")){
-                    JSONArray categories=jsonObject.getJSONArray("categories");
-                    books[i].setCategory(categories.getString(0));
+            if(object1.has("items")){
+                JSONArray array=object1.getJSONArray("items");
+                books=new Book[array.length()];
+                for(int i=0;i<array.length();i++){
+                    books[i]=new Book();
+                    JSONObject object=array.getJSONObject(i);
+                    if(object.has("id"))
+                    books[i].setId(object.getString("id"));
+                    if(object.has("volumeInfo")){
+                        JSONObject jsonObject=object.getJSONObject("volumeInfo");
+                        if(jsonObject.has("title"))
+                        books[i].setTitle(jsonObject.getString("title"));
+                        if(jsonObject.has("authors")){
+                            JSONArray jsonArray=jsonObject.getJSONArray("authors");
+                            books[i].setAuthors(jsonArray.getString(0));
+                        }
+                        if(jsonObject.has("publishedDate"))
+                        books[i].setPublishedDate(jsonObject.getString("publishedDate"));
+                        if(jsonObject.has("description"))
+                        books[i].setDescription(jsonObject.getString("description"));
+                        if(jsonObject.has("pageCount"))
+                        books[i].setPageCount(jsonObject.getString("pageCount"));
+                        if(jsonObject.has("categories")){
+                            JSONArray categories=jsonObject.getJSONArray("categories");
+                            books[i].setCategory(categories.getString(0));
+                        }
+                        if(jsonObject.has("averageRating"))
+                            books[i].setAvgRating(jsonObject.getString("averageRating"));
+                        if(jsonObject.has("imageLinks")){
+                            JSONObject imageLinks=jsonObject.getJSONObject("imageLinks");
+                            books[i].setImage(imageLinks.getString("thumbnail"));
+                        }
+                        if(jsonObject.has("language"))
+                        books[i].setLanguage(jsonObject.getString("language"));
+                        if(jsonObject.has("previewLink"))
+                        books[i].setWebReaderLink(jsonObject.getString("previewLink"));
+                    }
                 }
-                if(jsonObject.has("averageRating"))
-                books[i].setAvgRating(jsonObject.getString("averageRating"));
-                if(jsonObject.has("imageLinks")){
-                    JSONObject imageLinks=jsonObject.getJSONObject("imageLinks");
-                    books[i].setImage(imageLinks.getString("thumbnail"));
-                }
-                books[i].setLanguage(jsonObject.getString("language"));
-                books[i].setWebReaderLink(jsonObject.getString("previewLink"));
+                return books;
             }
-            return books;
+            return null;
         } catch (JSONException e) {
             e.printStackTrace();
             return null;

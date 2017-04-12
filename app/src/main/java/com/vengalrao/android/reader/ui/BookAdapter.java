@@ -41,8 +41,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookAdapterVie
     public void onBindViewHolder(BookAdapterViewHolder holder, int position) {
         Book currentBook=books[position];
         if(currentBook!=null){
-            //Log.v("book_path",currentBook.getImage());
+            if(currentBook.getImage()!=null)
             Picasso.with(mContext).load(currentBook.getImage()).into(holder.bookImage);
+            else
+            holder.bookImage.setBackground(mContext.getDrawable(R.drawable.bookcoverplaceholder));
             holder.bookName.setText(currentBook.getTitle());
         }
     }

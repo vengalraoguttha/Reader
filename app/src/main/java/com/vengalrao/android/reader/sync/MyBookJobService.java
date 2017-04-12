@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.vengalrao.android.reader.Utilities.Book;
 import com.vengalrao.android.reader.Utilities.NetworkUtilities;
+import com.vengalrao.android.reader.Utilities.ServiceUtilities;
 import com.vengalrao.android.reader.ui.BookAdapter;
 
 import java.net.URL;
@@ -29,7 +30,7 @@ public class MyBookJobService extends com.firebase.jobdispatcher.JobService {
                 URL url= NetworkUtilities.buildUrl(bundle.getString(KEY));
                 String s=NetworkUtilities.getResponseFromHttpUrl(url);
                 books=NetworkUtilities.getParsedData(s);
-
+                ServiceUtilities.updateDataBase(books);
                 return null;
             }
 

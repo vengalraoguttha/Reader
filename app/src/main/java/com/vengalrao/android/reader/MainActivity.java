@@ -1,6 +1,8 @@
 package com.vengalrao.android.reader;
 
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -23,10 +25,14 @@ import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.Trigger;
 import com.vengalrao.android.reader.Utilities.Book;
 import com.vengalrao.android.reader.Utilities.NetworkUtilities;
+import com.vengalrao.android.reader.data.BookContrack;
 import com.vengalrao.android.reader.sync.MyBookJobService;
 import com.vengalrao.android.reader.ui.BookAdapter;
+import com.vengalrao.android.reader.ui.SearchQueryDialog;
 
 import java.net.URL;
+
+import butterknife.BindView;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>,BookAdapter.GridItemClickListener{
 
@@ -37,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     BookAdapter adapter;
     private static final String KEY="QUERY";
     public static int LOADER_ID=111;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,10 +63,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(adapter);
-        //loadData();
-        Bundle bundle=new Bundle();
-        bundle.putString(KEY,"Novels");
-        FirebaseJobDispatcher jobDispatcher=new FirebaseJobDispatcher(new GooglePlayDriver(this));
+        loadData();
+        //Bundle bundle=new Bundle();
+        //bundle.putString(KEY,"Novels");
+        //service can be implemented by uncommenting given lines.
+        /*FirebaseJobDispatcher jobDispatcher=new FirebaseJobDispatcher(new GooglePlayDriver(this));
         Job bookLoadJob=jobDispatcher.newJobBuilder()
                 .setService(MyBookJobService.class)
                 .setTag("BOOKS_JOB")
@@ -68,7 +76,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 .setTrigger(Trigger.executionWindow(0,600))
                 .setExtras(bundle)
                 .build();
-        jobDispatcher.schedule(bookLoadJob);
+        jobDispatcher.mustSchedule(bookLoadJob);
+        fromDataBase();*/
+    }
+
+    public void button(View view){
+        new SearchQueryDialog().show(getFragmentManager(),"Search Dialog");
     }
 
     @Override
@@ -76,6 +89,47 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.menu,menu);
         return true;
+    }
+
+    public void fromDataBase(){
+        Cursor cursor=getContentResolver().query(BookContrack.BookGeneral.CONTENT_GENERAL_URI,
+        null,
+        null,
+        null,
+        null);
+        if(cursor!=null) {
+            books = new Book[cursor.getCount()];
+            for (int i = 0; i < cursor.getCount(); i++) {
+                books[i] = new Book();
+                books[i].setId(cursor.getString(cursor.getColumnIndex(BookContrack.BookGeneral.BOOK_ID)));
+                books[i].setTitle(cursor.getString(cursor.getColumnIndex(BookContrack.BookGeneral.BOOK_TITLE)));
+                books[i].setAuthors(cursor.getString(cursor.getColumnIndex(BookContrack.BookGeneral.BOOK_AUTHOR)));
+                books[i].setPublishedDate(cursor.getString(cursor.getColumnIndex(BookContrack.BookGeneral.BOOK_PUBLISHED_DATE)));
+                books[i].setDescription(cursor.getString(cursor.getColumnIndex(BookContrack.BookGeneral.BOOK_DESCRIPTION)));
+                books[i].setCategory(cursor.getString(cursor.getColumnIndex(BookContrack.BookGeneral.BOOK_CATEGORY)));
+                books[i].setAvgRating(cursor.getString(cursor.getColumnIndex(BookContrack.BookGeneral.BOOK_AVG_RATING)));
+                books[i].setWebReaderLink(cursor.getString(cursor.getColumnIndex(BookContrack.BookGeneral.BOOK_WEB_READER_LINK)));
+                books[i].setLanguage(cursor.getString(cursor.getColumnIndex(BookContrack.BookGeneral.BOOK_LANG)));
+                books[i].setImage(cursor.getString(cursor.getColumnIndex(BookContrack.BookGeneral.BOOK_IMAGE)));
+                books[i].setPageCount(cursor.getString(cursor.getColumnIndex(BookContrack.BookGeneral.BOOK_PAGE_COUNT)));
+            }
+            adapter.setData(books);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    public void searchQuery(String s){
+        if(s!=null&&!s.equals("")) {
+            Bundle bundle = new Bundle();
+            bundle.putString(KEY, s);
+            LoaderManager loaderManager = getSupportLoaderManager();
+            Loader<String> bookLoader = loaderManager.getLoader(LOADER_ID);
+            if (bookLoader == null) {
+                loaderManager.initLoader(LOADER_ID, bundle, this);
+            } else {
+                loaderManager.restartLoader(LOADER_ID, bundle, this);
+            }
+        }
     }
 
     public void loadData(){
@@ -116,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         };
     }
+
 
     @Override
     public void onLoadFinished(Loader<String> loader, String data) {

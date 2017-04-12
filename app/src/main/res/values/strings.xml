@@ -5,4 +5,8 @@
     <string name="search_fab_description">Search Books</string>
     <string name="main_book_image_description">Book Image</string>
     <string name="problem">No Network connection.</string>
+    <string name="query_hint">Book Name(Type)</string>
+    <string name="search_dialog_title">Search Book</string>
+    <string name="search_dialog_ok">search</string>
+    <string name="search_dialog_cancel">cancel</string>
 </resources>

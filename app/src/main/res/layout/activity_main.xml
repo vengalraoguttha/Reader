@@ -1,54 +1,57 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.vengalrao.android.reader.MainActivity">
+    android:background="@android:color/background_light"
+    android:fitsSystemWindows="true"
+    >
+
     <android.support.design.widget.AppBarLayout
-        android:elevation="4dp"
-        android:layout_marginBottom="6dp"
+        android:id="@+id/main.appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="168dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:fitsSystemWindows="true"
+        >
+
         <android.support.design.widget.CollapsingToolbarLayout
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:id="@+id/main.collapsing"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginStart="48dp"
+            app:expandedTitleMarginEnd="64dp"
+            >
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolBar_main"
-                android:minHeight="40dp"
-                app:layout_collapseMode="pin"
                 android:layout_width="match_parent"
-                android:layout_height="160dp">
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <TextView
-                        android:gravity="bottom"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textColor="@android:color/white"
-                        android:textSize="24sp"
-                        android:text="@string/app_name"/>
-                </LinearLayout>
-            </android.support.v7.widget.Toolbar>
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:layout_collapseMode="pin"
+                />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
+
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_margin="16dp"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
         <include layout="@layout/book_main_layout"/>
     </android.support.v4.widget.NestedScrollView>
+
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/search_fab"
         android:layout_margin="16dp"
         android:layout_width="@dimen/search_fab_size"
         android:layout_height="@dimen/search_fab_size"
         android:src="@drawable/ic_search_white_24px"
         android:layout_gravity="bottom|end"
         android:clickable="true"
+        android:onClick="button"
         android:elevation="@dimen/fab_standard_elevation"
         android:contentDescription="@string/search_fab_description"
         app:pressedTranslationZ="@dimen/fab_pressed"

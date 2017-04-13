@@ -20,6 +20,7 @@ import java.util.Scanner;
 
 public class NetworkUtilities {
     private static String BASE_URL="https://www.googleapis.com/books/v1/volumes";
+    private static String HIGH_QUALITY="https://www.googleapis.com/books/v1/volumes";
     private static String QUERY="q";
 
     public static URL buildUrl(String query){
@@ -31,6 +32,20 @@ public class NetworkUtilities {
         try {
             queryUrl=new URL(uri.toString());
         } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return queryUrl;
+    }
+
+    public static URL buildHighQualityImageURL(String id){
+        Uri uri=Uri.parse(HIGH_QUALITY)
+                .buildUpon()
+                .appendPath(id)
+                .build();
+        URL queryUrl=null;
+        try {
+            queryUrl=new URL(uri.toString());
+        }catch (MalformedURLException e){
             e.printStackTrace();
         }
         return queryUrl;
@@ -106,5 +121,35 @@ public class NetworkUtilities {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static String getHighQualityImage(String id){
+        String response=getResponseFromHttpUrl(buildHighQualityImageURL(id));
+        try {
+            if(response==null)
+                return null;
+            JSONObject object=new JSONObject(response);
+            if(object.has("volumeInfo")){
+                JSONObject innerObj=object.getJSONObject("volumeInfo");
+                if(innerObj.has("imageLinks")){
+                    JSONObject imageLinks=innerObj.getJSONObject("imageLinks");
+                    if(imageLinks.has("medium")){
+                        return imageLinks.getString("medium");
+                    }else if(imageLinks.has("large")){
+                        return imageLinks.getString("large");
+                    }else if(imageLinks.has("small")){
+                        return imageLinks.getString("small");
+                    }else{
+                        return null;
+                    }
+                }
+            }
+            return null;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 }

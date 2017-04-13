@@ -58,7 +58,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookAdapterVie
     }
 
     public interface GridItemClickListener{
-        void onGridItemClickListener(int clickedPosition);
+        void onGridItemClickListener(int clickedPosition,ImageView imageView);
     }
 
     class BookAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -74,7 +74,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookAdapterVie
         @Override
         public void onClick(View v) {
             int clickedPosition=getAdapterPosition();
-            mGridItemClickListener.onGridItemClickListener(clickedPosition);
+            mGridItemClickListener.onGridItemClickListener(clickedPosition,bookImage);
         }
     }
 

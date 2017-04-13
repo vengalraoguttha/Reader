@@ -1,7 +1,10 @@
 package com.vengalrao.android.reader;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -28,6 +31,7 @@ import com.vengalrao.android.reader.Utilities.NetworkUtilities;
 import com.vengalrao.android.reader.data.BookContrack;
 import com.vengalrao.android.reader.sync.MyBookJobService;
 import com.vengalrao.android.reader.ui.BookAdapter;
+import com.vengalrao.android.reader.ui.DetailActivity;
 import com.vengalrao.android.reader.ui.SearchQueryDialog;
 
 import java.net.URL;
@@ -42,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     Book[] books;
     BookAdapter adapter;
     private static final String KEY="QUERY";
+    private static final String KEY_IMG="QUERY_IMG";
+    private static String INTENT_SEND="Data";
+    private static String SAVE_BUNDLE="SaveBundle";
     public static int LOADER_ID=111;
 
     @Override
@@ -63,7 +70,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(adapter);
-        loadData();
+        if(savedInstanceState==null)
+        searchQuery("Android Programming",false);
+        else {
+            books=toBooksArray(savedInstanceState.getParcelableArray(SAVE_BUNDLE));
+            adapter.setData(books);
+        }
         //Bundle bundle=new Bundle();
         //bundle.putString(KEY,"Novels");
         //service can be implemented by uncommenting given lines.
@@ -80,6 +92,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         fromDataBase();*/
     }
 
+    public Book[] toBooksArray(Parcelable[] parcelables){
+        if(parcelables!=null){
+            Book[] b=new Book[parcelables.length];
+            for (int i=0;i<parcelables.length;i++){
+                b[i]=new Book();
+                b[i]=(Book)parcelables[i];
+            }
+            return b;
+        }else {
+            return null;
+        }
+    }
+
     public void button(View view){
         new SearchQueryDialog().show(getFragmentManager(),"Search Dialog");
     }
@@ -89,6 +114,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.menu,menu);
         return true;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArray(SAVE_BUNDLE,books);
     }
 
     public void fromDataBase(){
@@ -118,10 +149,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    public void searchQuery(String s){
+    public void searchQuery(String s,boolean flag){
         if(s!=null&&!s.equals("")) {
             Bundle bundle = new Bundle();
-            bundle.putString(KEY, s);
+            if(flag){
+                bundle.putString(KEY_IMG,s);
+            }else{
+                bundle.putString(KEY, s);
+            }
             LoaderManager loaderManager = getSupportLoaderManager();
             Loader<String> bookLoader = loaderManager.getLoader(LOADER_ID);
             if (bookLoader == null) {
@@ -132,17 +167,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    public void loadData(){
-        Bundle bundle=new Bundle();
-        bundle.putString(KEY,"Android Programming");
-        LoaderManager loaderManager=getSupportLoaderManager();
-        Loader<String> bookLoader=loaderManager.getLoader(LOADER_ID);
-        if(bookLoader==null){
-            loaderManager.initLoader(LOADER_ID,bundle,this);
-        }else{
-            loaderManager.restartLoader(LOADER_ID,bundle,this);
-        }
-    }
 
     public void showBooksData(){
         mRecyclerView.setVisibility(View.VISIBLE);
@@ -159,8 +183,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return new AsyncTaskLoader<String>(this) {
             @Override
             public String loadInBackground() {
-                URL url=NetworkUtilities.buildUrl(args.getString(KEY));
-                return NetworkUtilities.getResponseFromHttpUrl(url);
+                if(args.containsKey(KEY)){
+                    URL url=NetworkUtilities.buildUrl(args.getString(KEY));
+                    return NetworkUtilities.getResponseFromHttpUrl(url);
+                }else{
+                    for(int i=0;i<books.length;i++){
+                        books[i].setHighQualityImage(NetworkUtilities.getHighQualityImage(books[i].getId()));
+                    }
+                    return "###";
+                }
             }
 
             @Override
@@ -174,11 +205,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<String> loader, String data) {
-        if(data!=null&&!data.equals("")){
+        if(data!=null&&!data.equals("")&&!data.equals("###")){
             showBooksData();
             books=NetworkUtilities.getParsedData(data);
+            searchQuery("###",true);
             adapter.setData(books);
-        }else {
+        }else if(data.equals("###")){
+
+        }else{
             showErrorMessage();
         }
     }
@@ -189,7 +223,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     @Override
-    public void onGridItemClickListener(int clickedPosition) {
-
+    public void onGridItemClickListener(int clickedPosition,ImageView imageView) {
+        Intent intent=new Intent(MainActivity.this, DetailActivity.class);
+        intent.putExtra(INTENT_SEND,books[clickedPosition]);
+        ActivityOptions options=ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,imageView,getString(R.string.image_transition));
+        startActivity(intent,options.toBundle());
     }
 }

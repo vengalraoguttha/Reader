@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
+            android:transitionName="@string/image_transition"
             android:scaleType="centerCrop"
             android:contentDescription="@string/main_book_image_description"
             android:id="@+id/book_main_image"

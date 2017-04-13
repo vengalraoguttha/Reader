@@ -62,7 +62,7 @@ public class SearchQueryDialog extends DialogFragment {
     private void findResult(){
         Activity parent=getActivity();
         if(parent instanceof MainActivity){
-            ((MainActivity)parent).searchQuery(mEditText.getText().toString());
+            ((MainActivity)parent).searchQuery(mEditText.getText().toString(),false);
         }
         dismissAllowingStateLoss();
     }

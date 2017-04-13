@@ -20,6 +20,7 @@ public class Book implements Parcelable {
     private String language;
     private String image;
     private String pageCount;
+    private String highQualityImage;
 
     public Book(){
         super();
@@ -73,6 +74,10 @@ public class Book implements Parcelable {
         this.pageCount=pageCount;
     }
 
+    public void setHighQualityImage(String highQualityImage){
+        this.highQualityImage=highQualityImage;
+    }
+
     public String getId(){
         return Id;
     }
@@ -117,6 +122,10 @@ public class Book implements Parcelable {
         return authors;
     }
 
+    public String getHighQualityImage(){
+        return highQualityImage;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -135,6 +144,7 @@ public class Book implements Parcelable {
         dest.writeString(language);
         dest.writeString(image);
         dest.writeString(pageCount);
+        dest.writeString(highQualityImage);
     }
 
     private void readFromParcel(Parcel in){
@@ -149,6 +159,7 @@ public class Book implements Parcelable {
         language=in.readString();
         image=in.readString();
         pageCount=in.readString();
+        highQualityImage=in.readString();
     }
 
     public static final Parcelable.Creator<Book> CREATOR=new Creator<Book>() {

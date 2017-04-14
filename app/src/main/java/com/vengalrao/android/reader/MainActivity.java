@@ -45,6 +45,7 @@ import butterknife.BindView;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>,BookAdapter.GridItemClickListener,SharedPreferences.OnSharedPreferenceChangeListener{
 
+    //changes
     Toolbar toolbar;
     RecyclerView mRecyclerView;
     TextView mTextView;

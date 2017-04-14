@@ -29,6 +29,7 @@ import butterknife.ButterKnife;
 public class SearchQueryDialog extends DialogFragment {
 
     EditText mEditText;
+    SearchInterface mSearchInterface;
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
@@ -67,8 +68,13 @@ public class SearchQueryDialog extends DialogFragment {
             SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getActivity());
             String s1=sharedPreferences.getString(getString(R.string.book_search_pref_key),getString(R.string.book_search_default_val));
             String s2=sharedPreferences.getString(getString(R.string.list_search_by_key),getString(R.string.search_by_author_key));
-            ((MainActivity)parent).searchQuery(s1,s2,mEditText.getText().toString(),false);
+            //((MainActivity)parent).searchQuery(s1,s2,mEditText.getText().toString(),false);
+            mSearchInterface.searchMethod(s1,s2,mEditText.getText().toString(),false);
         }
         dismissAllowingStateLoss();
+    }
+
+    public interface SearchInterface{
+        void searchMethod(String s1,String s2,String s3,boolean flag);
     }
 }

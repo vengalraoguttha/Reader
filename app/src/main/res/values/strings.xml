@@ -26,7 +26,7 @@
     <string name="search_by_title_key">intitle</string>
     <string name="search_by_publisher_key">inpublisher</string>
     <string name="search_by_subject_key">subject</string>
-    
+
     <string name="check_ad_title">Display Ads</string>
     <string name="check_ad_key">displayAds</string>
     <string name="check_ad_summary">should display ad</string>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="pref_book_val">
+        <item>@string/search_by_author_val</item>
+        <item>@string/search_by_title_val</item>
+        <item>@string/search_by_publisher_val</item>
+        <item>@string/search_by_subject_val</item>
+    </array>
+    <array name="pref_book_key">
+        <item>@string/search_by_author_key</item>
+        <item>@string/search_by_title_key</item>
+        <item>@string/search_by_publisher_key</item>
+        <item>@string/search_by_subject_key</item>
+    </array>
+</resources>

@@ -10,6 +10,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.Loader;
+import android.util.Log;
 
 /**
  * Created by vengalrao on 12-04-2017.
@@ -22,14 +24,14 @@ public class BookProvider extends ContentProvider{
     public static final int FAV_ID=201;
 
     private BookDBHelper mBookDBHelper;
-    private static final UriMatcher sUriMacher=buildUriMacher();
+    private static final UriMatcher sUriMacher=buildUriMatcher();
 
-    public static UriMatcher buildUriMacher(){
+    public static UriMatcher buildUriMatcher(){
         UriMatcher uriMatcher=new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(BookContrack.AUTHORITY,BookContrack.PATH_GENERAL,GEN);
-        uriMatcher.addURI(BookContrack.AUTHORITY,BookContrack.PATH_GENERAL+"/#",GEN_ID);
+        uriMatcher.addURI(BookContrack.AUTHORITY,BookContrack.PATH_GENERAL+"/*",GEN_ID);
         uriMatcher.addURI(BookContrack.AUTHORITY,BookContrack.PATH_FAV,FAV);
-        uriMatcher.addURI(BookContrack.AUTHORITY,BookContrack.PATH_FAV+"/#",FAV_ID);
+        uriMatcher.addURI(BookContrack.AUTHORITY,BookContrack.PATH_FAV+"/*",FAV_ID);
 
         return uriMatcher;
     }

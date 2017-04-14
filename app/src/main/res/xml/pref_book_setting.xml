@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ListPreference
+        android:defaultValue="@string/search_by_author_key"
+        android:title="@string/list_search_by_title"
+        android:key="@string/list_search_by_key"
+        android:entries="@array/pref_book_val"
+        android:entryValues="@array/pref_book_key"
+        />
+    <EditTextPreference
+        android:key="@string/book_search_pref_key"
+        android:defaultValue="@string/book_search_default_val"
+        android:title="@string/book_search_val"
+        />
+    <CheckBoxPreference
+        android:title="@string/check_ad_title"
+        android:key="@string/check_ad_key"
+        android:summary="@string/check_ad_summary"
+        android:defaultValue="true"
+        />
+</PreferenceScreen>

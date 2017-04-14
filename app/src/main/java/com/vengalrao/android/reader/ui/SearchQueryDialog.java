@@ -5,7 +5,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +64,10 @@ public class SearchQueryDialog extends DialogFragment {
     private void findResult(){
         Activity parent=getActivity();
         if(parent instanceof MainActivity){
-            ((MainActivity)parent).searchQuery(mEditText.getText().toString(),false);
+            SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String s1=sharedPreferences.getString(getString(R.string.book_search_pref_key),getString(R.string.book_search_default_val));
+            String s2=sharedPreferences.getString(getString(R.string.list_search_by_key),getString(R.string.search_by_author_key));
+            ((MainActivity)parent).searchQuery(s1,s2,mEditText.getText().toString(),false);
         }
         dismissAllowingStateLoss();
     }

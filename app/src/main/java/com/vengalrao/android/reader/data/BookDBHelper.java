@@ -24,28 +24,30 @@ public class BookDBHelper extends SQLiteOpenHelper {
                 BookContrack.BookGeneral.BOOK_ID+" TEXT NOT NULL, "+
                 BookContrack.BookGeneral.BOOK_TITLE+" TEXT NOT NULL, "+
                 BookContrack.BookGeneral.BOOK_AUTHOR+" TEXT NOT NULL, "+
-                BookContrack.BookGeneral.BOOK_PUBLISHED_DATE+" TEXT NOT NULL, "+
-                BookContrack.BookGeneral.BOOK_DESCRIPTION+" TEXT NOT NULL, "+
-                BookContrack.BookGeneral.BOOK_CATEGORY+" TEXT NOT NULL, "+
-                BookContrack.BookGeneral.BOOK_AVG_RATING+" TEXT NOT NULL, "+
-                BookContrack.BookGeneral.BOOK_WEB_READER_LINK+" TEXT NOT NULL, "+
-                BookContrack.BookGeneral.BOOK_LANG+" TEXT NOT NULL, "+
-                BookContrack.BookGeneral.BOOK_IMAGE+" TEXT NOT NULL, "+
-                BookContrack.BookGeneral.BOOK_PAGE_COUNT+" TEXT NOT NULL );";
+                BookContrack.BookGeneral.BOOK_PUBLISHED_DATE+" TEXT , "+
+                BookContrack.BookGeneral.BOOK_DESCRIPTION+" TEXT , "+
+                BookContrack.BookGeneral.BOOK_CATEGORY+" TEXT , "+
+                BookContrack.BookGeneral.BOOK_AVG_RATING+" TEXT , "+
+                BookContrack.BookGeneral.BOOK_WEB_READER_LINK+" TEXT , "+
+                BookContrack.BookGeneral.BOOK_LANG+" TEXT , "+
+                BookContrack.BookGeneral.BOOK_IMAGE+" TEXT , "+
+                BookContrack.BookGeneral.BOOK_PAGE_COUNT+" TEXT , "+
+                BookContrack.BookGeneral.BOOk_HIGH_QUALITY_IMG+" TEXT  );";
         db.execSQL(CREATE_GENERAL_TABLE);
         final String CREATE_FAV_TABLE="CREATE TABLE "+BookContrack.BookFavorite.TABLE_NAME+" ("+
                 BookContrack.BookFavorite._ID+" INTEGER PRIMARY KEY, "+
                 BookContrack.BookFavorite.BOOK_ID+" TEXT NOT NULL, "+
                 BookContrack.BookFavorite.BOOK_TITLE+" TEXT NOT NULL, "+
                 BookContrack.BookFavorite.BOOK_AUTHOR+" TEXT NOT NULL, "+
-                BookContrack.BookFavorite.BOOK_PUBLISHED_DATE+" TEXT NOT NULL, "+
-                BookContrack.BookFavorite.BOOK_DESCRIPTION+" TEXT NOT NULL, "+
-                BookContrack.BookFavorite.BOOK_CATEGORY+" TEXT NOT NULL, "+
-                BookContrack.BookFavorite.BOOK_AVG_RATING+" TEXT NOT NULL, "+
-                BookContrack.BookFavorite.BOOK_WEB_READER_LINK+" TEXT NOT NULL, "+
-                BookContrack.BookFavorite.BOOK_LANG+" TEXT NOT NULL, "+
-                BookContrack.BookFavorite.BOOK_IMAGE+" TEXT NOT NULL, "+
-                BookContrack.BookFavorite.BOOK_PAGE_COUNT+" TEXT NOT NULL );";
+                BookContrack.BookFavorite.BOOK_PUBLISHED_DATE+" TEXT , "+
+                BookContrack.BookFavorite.BOOK_DESCRIPTION+" TEXT , "+
+                BookContrack.BookFavorite.BOOK_CATEGORY+" TEXT , "+
+                BookContrack.BookFavorite.BOOK_AVG_RATING+" TEXT , "+
+                BookContrack.BookFavorite.BOOK_WEB_READER_LINK+" TEXT , "+
+                BookContrack.BookFavorite.BOOK_LANG+" TEXT , "+
+                BookContrack.BookFavorite.BOOK_IMAGE+" TEXT , "+
+                BookContrack.BookFavorite.BOOK_PAGE_COUNT+" TEXT , "+
+                BookContrack.BookFavorite.BOOk_HIGH_QUALITY_IMG+" TEXT  );";
         db.execSQL(CREATE_FAV_TABLE);
     }
 

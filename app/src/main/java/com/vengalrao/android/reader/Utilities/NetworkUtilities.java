@@ -37,6 +37,20 @@ public class NetworkUtilities {
         return queryUrl;
     }
 
+    public static URL buildSpecificUrl(String s1,String s2,String query){
+        Uri uri=Uri.parse(BASE_URL)
+                .buildUpon()
+                .appendQueryParameter(QUERY,query)
+                .build();
+        URL queryUrl=null;
+        try {
+            queryUrl=new URL(uri.toString().concat("+").concat(s1).concat(":").concat(s2));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return queryUrl;
+    }
+
     public static URL buildHighQualityImageURL(String id){
         Uri uri=Uri.parse(HIGH_QUALITY)
                 .buildUpon()

@@ -61,6 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <LinearLayout
+                android:layout_marginBottom="16dp"
                 android:elevation="4dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -158,16 +159,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <Button
+                    android:layout_gravity="center_horizontal"
                     android:id="@+id/read_book"
                     android:layout_marginBottom="16dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:layout_height="36dp"
                     android:text="@string/read_book"/>
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/favorite_fab"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_margin="16dp"

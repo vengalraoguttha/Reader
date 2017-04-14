@@ -2,6 +2,7 @@ package com.vengalrao.android.reader;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Parcelable;
@@ -11,15 +12,18 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
@@ -33,12 +37,13 @@ import com.vengalrao.android.reader.sync.MyBookJobService;
 import com.vengalrao.android.reader.ui.BookAdapter;
 import com.vengalrao.android.reader.ui.DetailActivity;
 import com.vengalrao.android.reader.ui.SearchQueryDialog;
+import com.vengalrao.android.reader.ui.Settings;
 
 import java.net.URL;
 
 import butterknife.BindView;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>,BookAdapter.GridItemClickListener{
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>,BookAdapter.GridItemClickListener,SharedPreferences.OnSharedPreferenceChangeListener{
 
     Toolbar toolbar;
     RecyclerView mRecyclerView;
@@ -47,9 +52,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     BookAdapter adapter;
     private static final String KEY="QUERY";
     private static final String KEY_IMG="QUERY_IMG";
+    private static final String KEY_STYPE="S_TYPE";
     private static String INTENT_SEND="Data";
     private static String SAVE_BUNDLE="SaveBundle";
     public static int LOADER_ID=111;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mRecyclerView=(RecyclerView)findViewById(R.id.book_main_recycler_view);
         mTextView=(TextView)findViewById(R.id.no_net);
         adapter=new BookAdapter(this,this);
+        sharedPreferences=PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
         int columns;
         if(this.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT){
             columns=2;
@@ -70,8 +79,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(adapter);
-        if(savedInstanceState==null)
-        searchQuery("Android Programming",false);
+        if(savedInstanceState==null){
+            String s1=sharedPreferences.getString(getString(R.string.book_search_pref_key),getString(R.string.book_search_default_val));
+            String s2=sharedPreferences.getString(getString(R.string.list_search_by_key),getString(R.string.search_by_author_key));
+            searchQuery(s1,s2,"Harry Potter",false);
+        }
         else {
             books=toBooksArray(savedInstanceState.getParcelableArray(SAVE_BUNDLE));
             adapter.setData(books);
@@ -105,6 +117,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+    }
+
     public void button(View view){
         new SearchQueryDialog().show(getFragmentManager(),"Search Dialog");
     }
@@ -114,6 +132,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.menu,menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id=item.getItemId();
+        if(id==R.id.action_setting){
+            Intent intent=new Intent(MainActivity.this, Settings.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -149,13 +178,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    public void searchQuery(String s,boolean flag){
+    public void searchQuery(String s,String s2,String query,boolean flag){
         if(s!=null&&!s.equals("")) {
             Bundle bundle = new Bundle();
             if(flag){
                 bundle.putString(KEY_IMG,s);
             }else{
-                bundle.putString(KEY, s);
+                bundle.putString(KEY, query);
+                bundle.putString(KEY_STYPE,s2);
+                bundle.putString("S_VAL",s);
             }
             LoaderManager loaderManager = getSupportLoaderManager();
             Loader<String> bookLoader = loaderManager.getLoader(LOADER_ID);
@@ -184,11 +215,25 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public String loadInBackground() {
                 if(args.containsKey(KEY)){
-                    URL url=NetworkUtilities.buildUrl(args.getString(KEY));
+                    String s=null;
+                    String s2=null;
+                    URL url=null;
+                    if(args.containsKey(KEY_STYPE)){
+                        s=args.getString(KEY_STYPE);
+                        s2=args.getString("S_VAL");
+                        url=NetworkUtilities.buildSpecificUrl(s,s2,args.getString(KEY));
+                    }else{
+                        url=NetworkUtilities.buildUrl(args.getString(KEY));
+                    }
                     return NetworkUtilities.getResponseFromHttpUrl(url);
                 }else{
-                    for(int i=0;i<books.length;i++){
-                        books[i].setHighQualityImage(NetworkUtilities.getHighQualityImage(books[i].getId()));
+                    if(books!=null){
+                        for(int i=0;i<books.length;i++){
+                            books[i].setHighQualityImage(NetworkUtilities.getHighQualityImage(books[i].getId()));
+                        }
+                    }else{
+                        //Toast.makeText(MainActivity.this, "No Books available with given query.", Toast.LENGTH_SHORT).show();
+                        return null;
                     }
                     return "###";
                 }
@@ -208,9 +253,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if(data!=null&&!data.equals("")&&!data.equals("###")){
             showBooksData();
             books=NetworkUtilities.getParsedData(data);
-            searchQuery("###",true);
+            searchQuery("###","###","###",true);
             adapter.setData(books);
-        }else if(data.equals("###")){
+        }else if(("###").equals(data)){
 
         }else{
             showErrorMessage();
@@ -228,5 +273,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         intent.putExtra(INTENT_SEND,books[clickedPosition]);
         ActivityOptions options=ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,imageView,getString(R.string.image_transition));
         startActivity(intent,options.toBundle());
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        String s1=sharedPreferences.getString(getString(R.string.book_search_pref_key),getString(R.string.book_search_default_val));
+        String s2=sharedPreferences.getString(getString(R.string.list_search_by_key),getString(R.string.search_by_author_key));
+        searchQuery(s1,s2,"books",false);
     }
 }

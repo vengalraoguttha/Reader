@@ -28,6 +28,7 @@ public class BookContrack {
         public static final String BOOK_IMAGE="image";
         public static final String BOOK_WEB_READER_LINK="webReaderLink";
         public static final String BOOK_PAGE_COUNT="pageCount";
+        public static final String BOOk_HIGH_QUALITY_IMG="highQualityImg";
     }
 
     public static final class BookFavorite implements BaseColumns{
@@ -44,5 +45,6 @@ public class BookContrack {
         public static final String BOOK_IMAGE="image";
         public static final String BOOK_WEB_READER_LINK="webReaderLink";
         public static final String BOOK_PAGE_COUNT="pageCount";
+        public static final String BOOk_HIGH_QUALITY_IMG="highQualityImg";
     }
 }

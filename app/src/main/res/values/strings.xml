@@ -11,7 +11,30 @@
     <string name="search_dialog_cancel">cancel</string>
     <string name="image_transition">transition</string>
     <string name="description_text">Description</string>
-    <string name="read_book">Read Book</string>
+    <string name="read_book">Read Book Preview</string>
+    <string name="book_search_pref_key" translatable="false">bookSearchKey</string>
+    <string name="book_search_default_val" translatable="false">J.K. Rowling</string>
+    <string name="book_search_val">Default Search</string>
+    <string name="list_search_by_key">searchBy</string>
+    <string name="list_search_by_title">Search By</string>
+    <string name="search_by_author_val">Author</string>
+    <string name="search_by_title_val">Title of Book</string>
+    <string name="search_by_publisher_val">Publisher</string>
+    <string name="search_by_subject_val">Subject</string>
+
+    <string name="search_by_author_key">inauthor</string>
+    <string name="search_by_title_key">intitle</string>
+    <string name="search_by_publisher_key">inpublisher</string>
+    <string name="search_by_subject_key">subject</string>
+    
+    <string name="check_ad_title">Display Ads</string>
+    <string name="check_ad_key">displayAds</string>
+    <string name="check_ad_summary">should display ad</string>
+
+    <string name="toast_fav_added">Added to Favorites</string>
+    <string name="toast_fav_failed">Unable to add to favorites.Try later!</string>
+    <string name="toast_fav_removed">Removed from favorites.</string>
+    <string name="toast_fav_removed_failed">Unable to remove from favorites.Try later!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
